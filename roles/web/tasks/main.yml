@@ -1,0 +1,19 @@
+---
+- name: Install Apache on Ubuntu
+  apt:
+    name: apache2
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Apache on CentOS
+  dnf:
+    name: httpd
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: Start Apache on CentOS
+  service:
+    name: httpd
+    state: started
+    enabled: true
+  when: ansible_distribution == "CentOS"

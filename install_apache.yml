@@ -1,14 +1,13 @@
---- 
+---
 - hosts: all
   become: true
 
   tasks:
-    - name: Update package cache
-      apt:
+
+    - name: install apache and php
+      package:
+        name: 
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: latest
         update_cache: yes
-        name: apache2
-
-    - name: Install PHP support for Apache
-      apt:
-        name: libapache2-mod-php
-
