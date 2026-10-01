@@ -1,0 +1,4 @@
+[servers]
+192.168.56.101 ansible_user=serv1javillonar apache_package=apache2 php_package=libapache2-mod-php
+192.168.56.102 ansible_user=serv2javillonar apache_package=apache2 php_package=libapache2-mod-php
+192.168.1.23 ansible_user=cjavillonar apache_package=httpd php_package=php
