@@ -1,0 +1,17 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Nagios4 and plugins
+  apt:
+    name:
+      - nagios4
+      - nagios-plugins-basic
+    state: present
+
+- name: Start and enable Nagios service
+  service:
+    name: nagios4
+    state: started
+    enabled: yes
