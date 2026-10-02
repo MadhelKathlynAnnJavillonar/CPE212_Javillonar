@@ -1,0 +1,17 @@
+all:
+  children:
+
+    ubuntu:
+      hosts:
+
+        ubuntu1:
+          ansible_host: 192.168.56.101
+          ansible_user: serv1javillonar
+
+        ubuntu2:
+          ansible_host: 192.168.56.102
+          ansible_user: serv2javillonar
+
+        ubuntu3:
+          ansible_host: 192.168.56.103
+          ansible_user: wdjavillonar
