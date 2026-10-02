@@ -1,0 +1,27 @@
+---
+- name: change ownership to ansible_user
+  command: "chown -R {{ ansible_user }}:{{ ansible_user }} /opt"
+
+- name: Download prometheus archive
+  unarchive:
+    src: https://github.com/prometheus/prometheus/releases/download/v2.54.1/prometheus-2.54.1.linux-amd64.tar.gz
+    dest: /opt
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+
+- name: change name of extracted folder
+  command: "mv /opt/prometheus-2.54.1.linux-amd64 /opt/prometheus"
+
+- name: copy prometheus to /usr/local/bin/
+  copy:
+    src: /opt/prometheus/prometheus
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: '0755'
+
+- name: copy promtool to /usr/local/bin/
+  copy:
+    src: /opt/prometheus/promtool
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: '0755'
