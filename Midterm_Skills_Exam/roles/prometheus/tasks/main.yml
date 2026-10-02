@@ -25,3 +25,59 @@
     dest: /usr/local/bin/
     remote_src: yes
     mode: '0755'
+
+- name: change ownership to ansible_user
+  command: "chown -R {{ ansible_user }}:{{ ansible_user }} /usr/local/bin/prometheus"
+
+- name: change ownership of promtool
+  command: "chown -R {{ ansible_user }}:{{ ansible_user }} /usr/local/bin/promtool"
+
+- name: copy consoles from prometheus to /etc/prometheus/
+  copy:
+    src: /opt/prometheus/consoles
+    dest: /etc/prometheus/
+    remote_src: yes
+
+- name: copy console_libraries from prometheus to /etc/prometheus/
+  copy:
+    src: /opt/prometheus/console_libraries
+    dest: /etc/prometheus/
+    remote_src: yes
+
+- name: copy prometheus.yml from prometheus to /etc/prometheus/
+  copy:
+    src: /opt/prometheus/prometheus.yml
+    dest: /etc/prometheus/
+    remote_src: yes
+
+- name: change ownership to ansible_user
+  command: "chown -R {{ ansible_user }}:{{ ansible_user }} /etc/prometheus/"
+
+- name: create prometheus.service in /etc/systemd/system/prometheus.service
+  file:
+    path: /etc/systemd/system/prometheus.service
+    state: touch
+    mode: '0755'
+
+- name: paste content in service file
+  copy:
+    dest: /etc/systemd/system/prometheus.service
+    content: |
+      [Unit]
+      Description=Prometheus
+      Wants=network-online.target
+      After=network-online.target
+
+      [Service]
+      User=root
+      Group=root
+      ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: start prometheus
+  command: systemctl start prometheus
