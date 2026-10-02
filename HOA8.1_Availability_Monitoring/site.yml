@@ -1,0 +1,7 @@
+---
+- name: Install and configure Nagios on all servers
+  hosts: nagios_servers
+  become: yes
+
+  roles:
+    - nagios
