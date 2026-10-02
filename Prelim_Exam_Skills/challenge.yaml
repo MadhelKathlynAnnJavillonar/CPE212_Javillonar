@@ -1,0 +1,9 @@
+---
+- name: Supplementary Activity
+  hosts: servers
+
+  tasks:
+
+    - name: Display Welcome Message
+      debug:
+        msg: "Welcome to Ansible Laboratory"
