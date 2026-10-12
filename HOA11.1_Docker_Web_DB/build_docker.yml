@@ -1,0 +1,29 @@
+- name: Build the web and database Docker image locally
+  hosts: localhost
+  tasks:
+    - name: Create the Docker build directory
+      file:
+        path: "{{ ansible_env.HOME }}/web-db-build"
+        state: directory
+
+    - name: Copy the Dockerfile
+      copy:
+        src: Dockerfile
+        dest: "{{ ansible_env.HOME }}/web-db-build/Dockerfile"
+
+    - name: Build the web and database image
+      community.docker.docker_image:
+        name: web-db-server
+        tag: latest
+        source: build
+        build:
+          path: "{{ ansible_env.HOME }}/web-db-build"
+
+    - name: List Docker images
+      command: docker images
+      register: docker_images
+      changed_when: false
+
+    - name: Display Docker images
+      debug:
+        var: docker_images.stdout_lines
