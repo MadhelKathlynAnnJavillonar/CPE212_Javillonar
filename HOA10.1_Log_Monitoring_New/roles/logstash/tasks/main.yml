@@ -1,0 +1,50 @@
+---
+# tasks file for roles/logstash
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - gnupg
+      - curl
+    state: present
+    update_cache: true
+  become: true
+
+- name: Add Elastic signing key
+  ansible.builtin.get_url:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    dest: /usr/share/keyrings/elastic.asc
+    mode: '0644'
+  become: true
+
+- name: Add Elastic 8.x repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/elastic.asc] https://artifacts.elastic.co/packages/8.x/apt stable main"
+    state: present
+    filename: elastic-8.x
+    update_cache: true
+  become: true
+
+- name: Install Logstash
+  ansible.builtin.apt:
+    name: logstash
+    state: present
+    update_cache: true
+  become: true
+
+- name: Configure Logstash pipeline
+  ansible.builtin.template:
+    src: logstash.conf.j2
+    dest: /etc/logstash/conf.d/logstash.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart Logstash
+
+- name: Enable and start Logstash
+  ansible.builtin.systemd:
+    name: logstash
+    enabled: true
+    state: started
+  become: true
